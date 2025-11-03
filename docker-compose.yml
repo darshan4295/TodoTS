@@ -1,0 +1,20 @@
+services:
+  mongodb:
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+
+  # Production app container (for deployment)  
+  todo-app:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./server:/app:ro
+    environment:
+      - PORT=8080
+      - MONGO_URI=mongodb://mongodb:27017/todoapp
+    depends_on:
+      - mongodb

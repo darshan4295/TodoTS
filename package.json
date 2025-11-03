@@ -1,0 +1,48 @@
+{
+  "name": "todo-app-monorepo",
+  "version": "1.0.0",
+  "description": "Todo application with backend API",
+  "private": true,
+  "scripts": {
+    "dev": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "dev:backend": "cd server && npm run dev:local",
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:client\" --names \"backend,client\" --prefix-colors \"blue,green\"",
+    "build:all": "npm run build:server && npm run build:client",
+    "build:server": "cd server && npm run build",
+    "build:client": "cd client && npm run build",
+    "start": "cd server && npm start",
+    "test": "cd server && npm test",
+    "test:watch": "cd server && npm run test:watch",
+    "test:coverage": "cd server && npm run test:coverage",
+    "test:client": "cd client && npm test",
+    "test:client:watch": "cd client && npm run test:watch",
+    "test:client:coverage": "cd client && npm run test:coverage",
+    "lint": "npm run lint:server && npm run lint:client",
+    "lint:server": "cd server && npm run lint",
+    "lint:client": "cd client && npm run lint",
+    "format": "cd server && npm run format",
+    "docker:build": "cd server && npm run docker:build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "db:start": "cd server && npm run db:start",
+    "db:stop": "cd server && npm run db:stop",
+    "install:server": "cd server && npm install",
+    "install:client": "cd client && npm install",
+    "install:all": "concurrently \"npm run install:server\" \"npm run install:client\" --names \"server,client\" --prefix-colors \"blue,green\"",
+    "setup": "npm run install:server && npm run install:client"
+  },
+  "keywords": [
+    "todo",
+    "backend",
+    "nodejs",
+    "typescript",
+    "monorepo"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
+}
