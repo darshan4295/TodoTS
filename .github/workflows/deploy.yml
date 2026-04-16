@@ -62,7 +62,7 @@ jobs:
     needs: test
     outputs:
       image-tag: ${{ steps.meta.outputs.version }}
-      image-full: ${{ steps.meta.outputs.tags }}
+      image-full: ${{ steps.acr.outputs.server }}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.version }}
     steps:
       - uses: actions/checkout@v4
 
