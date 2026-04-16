@@ -86,7 +86,7 @@ jobs:
       - name: Build backend (TypeScript compile)
         run: |
           npm ci
-          npm run build:server
+          npm run build
         working-directory: server
 
       - name: Docker metadata
