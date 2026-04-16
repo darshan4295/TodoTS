@@ -20,4 +20,4 @@ export type UpdateTodoRequest = {
   completionMessage?: string;
 };
 
-export type FilterType = 'all' | 'completed' | 'pending';
+export type FilterType = "all" | "completed" | "pending";

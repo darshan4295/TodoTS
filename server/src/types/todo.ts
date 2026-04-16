@@ -8,16 +8,16 @@ type TodoBase = {
 
 export type Todo =
   | (TodoBase & {
-      status: 'pending';
+      status: "pending";
     })
   | (TodoBase & {
-      status: 'completed';
+      status: "completed";
       completionMessage: string;
     });
 
 export type InternalUpdateTodoRequest = {
   title?: string;
   description?: string;
-  status?: 'pending' | 'completed';
+  status?: "pending" | "completed";
   completionMessage?: string;
 };

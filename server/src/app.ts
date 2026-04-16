@@ -1,11 +1,11 @@
-import express, { Express, Request, Response, NextFunction } from 'express';
-import cors from 'cors';
-import * as OpenApiValidator from 'express-openapi-validator';
-import { Server } from 'http';
-import swaggerUi from 'swagger-ui-express';
-import { Database } from './config/database';
-import { createTodoRoutes } from './routes/todoRoutes';
-import apiDocs from './openapi.json';
+import express, { Express, Request, Response, NextFunction } from "express";
+import cors from "cors";
+import * as OpenApiValidator from "express-openapi-validator";
+import { Server } from "http";
+import swaggerUi from "swagger-ui-express";
+import { Database } from "./config/database";
+import { createTodoRoutes } from "./routes/todoRoutes";
+import apiDocs from "./openapi.json";
 
 export class TodoApplication {
   private app: Express;
@@ -49,12 +49,12 @@ export class TodoApplication {
 
     // Swagger UI documentation
     this.app.use(
-      '/api-docs',
+      "/api-docs",
       swaggerUi.serve,
       swaggerUi.setup(apiDocs, {
         explorer: true,
-        customCss: '.swagger-ui .topbar { display: none }',
-        customSiteTitle: 'Todo API Documentation',
+        customCss: ".swagger-ui .topbar { display: none }",
+        customSiteTitle: "Todo API Documentation",
         swaggerOptions: {
           persistAuthorization: true,
         },
@@ -62,43 +62,49 @@ export class TodoApplication {
     );
 
     // API routes
-    this.app.use('/api/todos', todoRoutes);
+    this.app.use("/api/todos", todoRoutes);
 
     // Health check endpoint
-    this.app.get('/health', (_req: Request, res: Response) => {
-      res.json({ status: 'OK', timestamp: new Date().toISOString() });
+    this.app.get("/health", (_req: Request, res: Response) => {
+      res.json({ status: "OK", timestamp: new Date().toISOString() });
     });
 
     // 404 handler for unmatched routes
-    this.app.use('*', (_req: Request, res: Response) => {
-      res.status(404).json({ message: 'not found' });
+    this.app.use("*", (_req: Request, res: Response) => {
+      res.status(404).json({ message: "not found" });
     });
   }
 
   private setupErrorHandling(): void {
     // OpenAPI validation error handler
-    this.app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
-      if (err.status && err.status >= 400 && err.status < 500) {
-        // OpenAPI validation error
-        res.status(err.status).json({
-          message: err.message,
-          errors: err.errors || [],
-        });
-        return;
-      }
-      next(err);
-    });
+    this.app.use(
+      (err: any, _req: Request, res: Response, next: NextFunction) => {
+        if (err.status && err.status >= 400 && err.status < 500) {
+          // OpenAPI validation error
+          res.status(err.status).json({
+            message: err.message,
+            errors: err.errors || [],
+          });
+          return;
+        }
+        next(err);
+      },
+    );
 
     // General error handling middleware
-    this.app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
-      console.error(err.stack);
-      res.status(500).json({ error: 'Something went wrong!' });
-    });
+    this.app.use(
+      (err: Error, _req: Request, res: Response, _next: NextFunction) => {
+        console.error(err.stack);
+        res.status(500).json({ error: "Something went wrong!" });
+      },
+    );
   }
 
   public async initialize(): Promise<void> {
     // Connect to database
-    await this.database.connect(process.env['MONGO_URI'] || 'mongodb://localhost:27017/todoapp');
+    await this.database.connect(
+      process.env["MONGO_URI"] || "mongodb://localhost:27017/todoapp",
+    );
 
     // Setup routes after database connection
     this.setupRoutes();
@@ -131,7 +137,7 @@ export class TodoApplication {
           resolve(this.server!);
         });
 
-        this.server.on('error', (error) => {
+        this.server.on("error", (error) => {
           reject(error);
         });
       } catch (error) {
@@ -150,7 +156,7 @@ export class TodoApplication {
           if (error) {
             reject(error);
           } else {
-            console.log('Server stopped');
+            console.log("Server stopped");
             resolve();
           }
         });
@@ -185,11 +191,11 @@ export class TodoApplication {
    * Returns the address in the format: http://<address>:<port>
    */
   public getAddress(): string | undefined {
-    const addressInfo = this.server?.address() ?? '';
+    const addressInfo = this.server?.address() ?? "";
     const address =
-      typeof addressInfo === 'string'
+      typeof addressInfo === "string"
         ? addressInfo
-        : `${addressInfo.address === '::' ? 'localhost' : addressInfo.address}:${addressInfo.port}`;
+        : `${addressInfo.address === "::" ? "localhost" : addressInfo.address}:${addressInfo.port}`;
 
     return `http://${address}`;
   }

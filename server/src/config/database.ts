@@ -1,4 +1,4 @@
-import { MongoClient, Db } from 'mongodb';
+import { MongoClient, Db } from "mongodb";
 
 export class Database {
   private static instance: Database;
@@ -23,9 +23,9 @@ export class Database {
       });
       await this.client.connect();
       this.db = this.client.db();
-      console.log('Connected to MongoDB database');
+      console.log("Connected to MongoDB database");
     } catch (error) {
-      console.error('Failed to connect to MongoDB:', error);
+      console.error("Failed to connect to MongoDB:", error);
       throw error;
     }
   }
@@ -35,13 +35,13 @@ export class Database {
       await this.client.close();
       this.client = null;
       this.db = null;
-      console.log('Disconnected from MongoDB');
+      console.log("Disconnected from MongoDB");
     }
   }
 
   public getDb(): Db {
     if (!this.db) {
-      throw new Error('Database not connected. Call connect() first.');
+      throw new Error("Database not connected. Call connect() first.");
     }
     return this.db;
   }

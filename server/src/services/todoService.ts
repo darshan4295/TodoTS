@@ -1,8 +1,8 @@
-import { err, ok, Result } from 'neverthrow';
-import { Todo, InternalUpdateTodoRequest } from '../types/todo';
-import { CreateTodoRequest } from '../types/api';
-import { TodoRepository } from '../repositories/todoRepository';
-import { AppError } from '../types/errors';
+import { err, ok, Result } from "neverthrow";
+import { Todo, InternalUpdateTodoRequest } from "../types/todo";
+import { CreateTodoRequest } from "../types/api";
+import { TodoRepository } from "../repositories/todoRepository";
+import { AppError } from "../types/errors";
 
 export class TodoService {
   constructor(private todoRepository: TodoRepository) {}
@@ -15,11 +15,16 @@ export class TodoService {
     return await this.todoRepository.findById(id);
   }
 
-  async createTodo(todoData: CreateTodoRequest): Promise<Result<Todo, AppError>> {
+  async createTodo(
+    todoData: CreateTodoRequest,
+  ): Promise<Result<Todo, AppError>> {
     return await this.todoRepository.create(todoData);
   }
 
-  async updateTodo(id: string, updates: InternalUpdateTodoRequest): Promise<Result<Todo, AppError>> {
+  async updateTodo(
+    id: string,
+    updates: InternalUpdateTodoRequest,
+  ): Promise<Result<Todo, AppError>> {
     return await this.todoRepository.update(id, updates);
   }
 
@@ -32,7 +37,9 @@ export class TodoService {
     if (allTodosResult.isErr()) {
       return err(allTodosResult.error);
     }
-    const filteredTodos = allTodosResult.value.filter((todo) => todo.status === 'completed');
+    const filteredTodos = allTodosResult.value.filter(
+      (todo) => todo.status === "completed",
+    );
     return ok(filteredTodos);
   }
 
@@ -41,7 +48,9 @@ export class TodoService {
     if (allTodosResult.isErr()) {
       return err(allTodosResult.error);
     }
-    const filteredTodos = allTodosResult.value.filter((todo) => todo.status === 'pending');
+    const filteredTodos = allTodosResult.value.filter(
+      (todo) => todo.status === "pending",
+    );
     return ok(filteredTodos);
   }
 }

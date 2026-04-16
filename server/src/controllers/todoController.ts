@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
-import { TodoService } from '../services/todoService';
-import { CreateTodoRequest, UpdateTodoRequest, ApiTodo } from '../types/api';
-import { InternalUpdateTodoRequest, Todo } from '../types/todo';
-import { AppError, createValidationError } from '../types/errors';
+import { Request, Response } from "express";
+import { TodoService } from "../services/todoService";
+import { CreateTodoRequest, UpdateTodoRequest, ApiTodo } from "../types/api";
+import { InternalUpdateTodoRequest, Todo } from "../types/todo";
+import { AppError, createValidationError } from "../types/errors";
 
 export class TodoController {
   private todoService: TodoService;
@@ -12,7 +12,7 @@ export class TodoController {
   }
 
   private todoToApiTodo(todo: Todo): ApiTodo {
-    if (todo.status === 'completed') {
+    if (todo.status === "completed") {
       const apiTodo: ApiTodo = {
         id: todo.id,
         title: todo.title,
@@ -45,29 +45,29 @@ export class TodoController {
   }
 
   private handleError(res: Response, error: AppError): void {
-    console.error('Error in TodoController:', error);
+    console.error("Error in TodoController:", error);
 
     switch (error.type) {
-      case 'NOT_FOUND':
+      case "NOT_FOUND":
         res.status(404).json({
-          error: 'Resource not found',
+          error: "Resource not found",
           message: error.message,
           resource: error.resource,
           id: error.id,
         });
         break;
-      case 'VALIDATION_ERROR':
+      case "VALIDATION_ERROR":
         res.status(400).json({
-          error: 'Validation error',
+          error: "Validation error",
           message: error.message,
           field: error.field,
         });
         break;
-      case 'DATABASE_ERROR':
+      case "DATABASE_ERROR":
       default:
         res.status(500).json({
-          error: 'Internal server error',
-          message: 'An unexpected error occurred',
+          error: "Internal server error",
+          message: "An unexpected error occurred",
         });
         break;
     }
@@ -124,16 +124,22 @@ export class TodoController {
     if (apiUpdates.completed !== undefined) {
       if (apiUpdates.completed) {
         // Validate that completion message is provided when marking as completed
-        if (!apiUpdates.completionMessage || apiUpdates.completionMessage.trim() === '') {
+        if (
+          !apiUpdates.completionMessage ||
+          apiUpdates.completionMessage.trim() === ""
+        ) {
           return this.handleError(
             res,
-            createValidationError('Completion message is required when marking todo as completed', 'completionMessage'),
+            createValidationError(
+              "Completion message is required when marking todo as completed",
+              "completionMessage",
+            ),
           );
         }
-        internalUpdates.status = 'completed';
+        internalUpdates.status = "completed";
         internalUpdates.completionMessage = apiUpdates.completionMessage;
       } else {
-        internalUpdates.status = 'pending';
+        internalUpdates.status = "pending";
       }
     }
 
