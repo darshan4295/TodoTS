@@ -2,7 +2,7 @@ import { Collection, Db } from 'mongodb';
 import { Result, ok, err } from 'neverthrow';
 import { randomUUID } from 'crypto';
 import { Todo, InternalUpdateTodoRequest } from '../types/todo';
-import { CreateTodoRequest } from '../../../client/src/types/api';
+import { CreateTodoRequest } from '../types/api';
 import { AppError, createDatabaseError, createNotFoundError } from '../types/errors';
 
 // Common base type for all todo documents

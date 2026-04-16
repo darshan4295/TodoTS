@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { ApiTodo, CreateTodoRequest, UpdateTodoRequest } from '../types/api';
 
-const API_BASE_URL = '/api/todos';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+  ? `${import.meta.env.VITE_API_BASE_URL}/api/todos`
+  : '/api/todos';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

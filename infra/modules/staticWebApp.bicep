@@ -44,8 +44,9 @@ var skuTier = isProd ? 'Standard' : 'Free'
 
 resource swa 'Microsoft.Web/staticSites@2023-12-01' = {
   name: appName
-  // SWA has limited regional availability – it will be placed in the nearest supported region
-  location: location
+  // SWA has limited regional availability – eastasia is closest to India
+  // Supported: westus2, centralus, eastus2, westeurope, eastasia
+  location: 'eastasia'
   tags: tags
   sku: {
     name: skuName

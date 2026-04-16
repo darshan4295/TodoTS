@@ -59,6 +59,8 @@ resource cosmosAccount 'Microsoft.DocumentDB/databaseAccounts@2024-05-15' = {
       ? []
       : [{ name: 'EnableServerless' }]
 
+    // Disable availability zones to avoid capacity issues in high-demand regions
+    enableMultipleWriteLocations: false
     locations: [
       {
         locationName: location

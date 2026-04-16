@@ -4,7 +4,7 @@ import { ok, err } from 'neverthrow';
 import { TodoService } from './todoService';
 import { TodoRepository } from '../repositories/todoRepository';
 import { Todo } from '../types/todo';
-import { CreateTodoRequest } from '../../../client/src/types/api';
+import { CreateTodoRequest } from '../types/api';
 import { createDatabaseError, createNotFoundError } from '../types/errors';
 
 describe('TodoService', () => {

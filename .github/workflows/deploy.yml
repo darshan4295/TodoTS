@@ -128,25 +128,17 @@ jobs:
         id: env
         run: |
           if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            echo "rg=${{ env.AZURE_RESOURCE_GROUP_PROD }}" >> "$GITHUB_OUTPUT"
             echo "params=infra/parameters/prod.bicepparam" >> "$GITHUB_OUTPUT"
           else
-            echo "rg=${{ env.AZURE_RESOURCE_GROUP_DEV }}" >> "$GITHUB_OUTPUT"
             echo "params=infra/parameters/dev.bicepparam" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Create resource group if needed
-        run: |
-          az group create \
-            --name ${{ steps.env.outputs.rg }} \
-            --location eastus \
-            --tags managedBy=bicep application=todots
-
-      - name: Deploy Bicep
+      - name: Deploy Bicep (subscription scope)
         id: deploy
         uses: azure/arm-deploy@v2
         with:
-          resourceGroupName: ${{ steps.env.outputs.rg }}
+          scope: subscription
+          region: centralindia
           template: infra/main.bicep
           parameters: >
             ${{ steps.env.outputs.params }}

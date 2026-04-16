@@ -4,7 +4,7 @@ import { MongoClient, Db } from 'mongodb';
 import { ok, err } from 'neverthrow';
 import { TodoRepository } from './todoRepository';
 import { InternalUpdateTodoRequest, Todo } from '../types/todo';
-import { CreateTodoRequest } from '../../../client/src/types/api';
+import { CreateTodoRequest } from '../types/api';
 
 describe('TodoRepository Integration Tests', () => {
   let mongoServer: MongoMemoryServer;

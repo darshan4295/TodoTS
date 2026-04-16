@@ -1,7 +1,8 @@
 /*
   TodoTS – Azure Infrastructure (Bicep)
   ======================================
-  Deploys the full stack:
+  Deploys the full stack at subscription scope:
+    • Resource Group
     • Log Analytics Workspace + Application Insights
     • Azure Container Registry (ACR)
     • Azure Cosmos DB for MongoDB API
@@ -9,14 +10,13 @@
     • Azure Static Web Apps (React frontend)
 
   Deployment:
-    az group create -n rg-todots-dev -l eastus
-    az deployment group create \
-      -g rg-todots-dev \
+    az deployment sub create \
+      --location centralindia \
       -f infra/main.bicep \
       -p infra/parameters/dev.bicepparam
 */
 
-targetScope = 'resourceGroup'
+targetScope = 'subscription'
 
 // ─── Parameters ──────────────────────────────────────────────────────────────
 
@@ -29,8 +29,8 @@ param appName string = 'todots'
 @allowed(['dev', 'prod'])
 param environment string = 'dev'
 
-@description('Azure region for all resources. Defaults to the resource group location.')
-param location string = resourceGroup().location
+@description('Azure region for all resources.')
+param location string = 'centralindia'
 
 @description('Container image to run in the backend Container App (e.g. myacr.azurecr.io/todo-api:v1.0.0). Use the placeholder default for the very first deployment before an image has been pushed.')
 param containerImage string = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
@@ -46,13 +46,23 @@ param tags object = {
 // ─── Derived names ───────────────────────────────────────────────────────────
 
 var prefix = '${appName}-${environment}'
+var resourceGroupName = 'rg-${prefix}'
 // ACR names must be globally unique and alphanumeric only
 var acrName = '${replace(appName, '-', '')}${environment}acr'
+
+// ─── Resource Group ─────────────────────────────────────────────────────────
+
+resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
+  name: resourceGroupName
+  location: location
+  tags: tags
+}
 
 // ─── Modules ─────────────────────────────────────────────────────────────────
 
 module logAnalytics 'modules/logAnalytics.bicep' = {
   name: 'deploy-logAnalytics'
+  scope: rg
   params: {
     workspaceName: '${prefix}-law'
     location: location
@@ -62,6 +72,7 @@ module logAnalytics 'modules/logAnalytics.bicep' = {
 
 module acr 'modules/containerRegistry.bicep' = {
   name: 'deploy-acr'
+  scope: rg
   params: {
     registryName: acrName
     location: location
@@ -72,6 +83,7 @@ module acr 'modules/containerRegistry.bicep' = {
 
 module cosmosdb 'modules/cosmosdb.bicep' = {
   name: 'deploy-cosmosdb'
+  scope: rg
   params: {
     accountName: '${prefix}-cosmos'
     databaseName: 'todoapp'
@@ -84,6 +96,7 @@ module cosmosdb 'modules/cosmosdb.bicep' = {
 
 module containerAppEnv 'modules/containerAppEnvironment.bicep' = {
   name: 'deploy-containerAppEnv'
+  scope: rg
   params: {
     environmentName: '${prefix}-cae'
     location: location
@@ -95,6 +108,7 @@ module containerAppEnv 'modules/containerAppEnvironment.bicep' = {
 
 module containerApp 'modules/containerApp.bicep' = {
   name: 'deploy-containerApp'
+  scope: rg
   params: {
     appName: '${prefix}-api'
     location: location
@@ -112,6 +126,7 @@ module containerApp 'modules/containerApp.bicep' = {
 
 module staticWebApp 'modules/staticWebApp.bicep' = {
   name: 'deploy-staticWebApp'
+  scope: rg
   params: {
     appName: '${prefix}-swa'
     location: location
@@ -122,6 +137,9 @@ module staticWebApp 'modules/staticWebApp.bicep' = {
 }
 
 // ─── Outputs ─────────────────────────────────────────────────────────────────
+
+@description('Resource group name created by this deployment.')
+output resourceGroupName string = rg.name
 
 @description('Azure Container Registry login server – use this as the image prefix when pushing.')
 output acrLoginServer string = acr.outputs.loginServer

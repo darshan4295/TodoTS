@@ -4,7 +4,7 @@ using 'main.bicep'
 
 param appName = 'todots'
 param environment = 'dev'
-param location = 'eastus'
+param location = 'centralindia'
 
 // Replace with a real image after the first `docker build + push` to ACR.
 // Example: param containerImage = 'todotsdevacr.azurecr.io/todo-api:latest'

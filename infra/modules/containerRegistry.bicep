@@ -2,8 +2,7 @@
   Azure Container Registry
   ========================
   Stores backend Docker images.
-  - Dev  → Basic SKU (cheapest, no geo-replication)
-  - Prod → Standard SKU (content trust, webhooks)
+  - Dev / Prod → Standard SKU (Basic is deprecated in many regions)
 
   NOTE: Admin credentials are enabled so Container Apps can pull images
   without a managed identity. Switch to managed identity for stricter
@@ -27,7 +26,7 @@ param environment string
 
 // ─── Derived values ───────────────────────────────────────────────────────────
 
-var skuName = environment == 'prod' ? 'Standard' : 'Basic'
+var skuName = 'Standard'
 
 // ─── Resources ───────────────────────────────────────────────────────────────
 
@@ -41,15 +40,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2023-11-01-preview' = {
   properties: {
     adminUserEnabled: true
     publicNetworkAccess: 'Enabled'
-    // Zone redundancy is only supported on Premium SKU
     zoneRedundancy: 'Disabled'
-    policies: {
-      retentionPolicy: {
-        // Keep untagged manifests for 7 days (dev) / 30 days (prod)
-        days: environment == 'prod' ? 30 : 7
-        status: 'enabled'
-      }
-    }
   }
 }
 

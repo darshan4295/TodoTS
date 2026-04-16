@@ -5,5 +5,5 @@
     "types": ["node", "vitest/globals"],
     "resolveJsonModule": true
   },
-  "include": ["src/**/*", "tests/**/*", "../client/src/types/api.ts"]
+  "include": ["src/**/*", "tests/**/*"]
 }

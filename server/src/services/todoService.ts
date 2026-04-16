@@ -1,6 +1,6 @@
 import { err, ok, Result } from 'neverthrow';
 import { Todo, InternalUpdateTodoRequest } from '../types/todo';
-import { CreateTodoRequest } from '../../../client/src/types/api';
+import { CreateTodoRequest } from '../types/api';
 import { TodoRepository } from '../repositories/todoRepository';
 import { AppError } from '../types/errors';
 

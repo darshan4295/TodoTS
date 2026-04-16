@@ -4,7 +4,7 @@ using '../main.bicep'
 
 param appName = 'todots'
 param environment = 'prod'
-param location = 'eastus'
+param location = 'centralindia'
 param containerImage = 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
 
 param tags = {

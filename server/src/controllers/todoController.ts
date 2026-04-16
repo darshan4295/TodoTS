@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { TodoService } from '../services/todoService';
-import { CreateTodoRequest, UpdateTodoRequest, ApiTodo } from '../../../client/src/types/api';
+import { CreateTodoRequest, UpdateTodoRequest, ApiTodo } from '../types/api';
 import { InternalUpdateTodoRequest, Todo } from '../types/todo';
 import { AppError, createValidationError } from '../types/errors';
 
